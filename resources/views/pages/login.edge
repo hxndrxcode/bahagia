@@ -11,26 +11,38 @@
     <input type="password" x-model="form.password" class="form-control">
   </div>
   <div class="">
-    <button class="btn btn-primary w-100" @click="login">Login</button>
+    <button class="btn btn-primary w-100" @click="login" :disabled="isSending || !validSubmit">Login</button>
   </div>
 </div>
-<div class="alert alert-secondary small p-2 mb-2">
+<div class="alert alert-secondary small p-2 mb-2 text-center">
   Belum punya akun? <a href="/register">Daftar</a>
 </div>
-<div class="alert alert-secondary small p-2 mb-4">
-  Lupa kata sandi? <a href="/login">Klik disini</a>
+<div class="alert alert-secondary small p-2 text-center">
+  Lupa kata sandi? <a href="//wa.me/6289617859987?text=Saya lupa password. Mohon bantuannya.">Klik disini</a>
 </div>
 
 <script src="//unpkg.com/alpinejs" defer></script>
 <script>
 document.addEventListener('alpine:init', () => {
   Alpine.data('login', () => ({
-    form: {},
+    form: {
+      phone: '',
+      password: ''
+    },
+    isSending: false,
+    get validSubmit() {
+      return this.form.phone.length >= 6 && this.form.password.length >= 6
+    },
     login() {
+      this.isSending = true
       let v = this
       apiReq('post', '/api/login', v.form).then(res => {
         location.href = '/profile'
       })
+      .catch(e => {
+        v.isSending = false
+      })
+
     }
   }))
 })

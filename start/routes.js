@@ -27,10 +27,12 @@ Route.post('/api/login', 'AuthController.apiLogin')
 
 Route.get('/member', 'UserController.member')
 Route.get('/m/:username', 'UserController.memberDetail')
-Route.get('/api/members', 'UserController.apiMemberList')
 Route.get('/profile', 'UserController.profile')
 Route.get('/profile/edit', 'UserController.editProfile')
 Route.get('/profile/password', 'UserController.editPassword')
+Route.get('/api/members', 'UserController.apiMemberList')
+Route.post('/api/profile', 'UserController.apiEditProfile')
+Route.post('/api/password', 'UserController.apiEditPassword')
 
 Route.get('/blog', 'BlogController.index')
 Route.get('/store', 'ProductController.index')

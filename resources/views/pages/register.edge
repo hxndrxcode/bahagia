@@ -1,18 +1,25 @@
 @layout('layout')
 
 @section('content')
-<div class="alert alert-secondary small p-2 mb-4">
-  Sudah punya akun? <a href="/login">Login</a>
-</div>
-<div x-data="register">
-  <h4 class="mb-3">Informasi Umum</h4>
-  <div class="mb-4 border rounded p-3 bg-light">
+<div x-data="register" class="mb-4">
+  <div x-show="step==1" class="mb-4 border rounded p-3 bg-light">
     <div class="mb-3">
-      <label for="" class="form-label">No. Whatsapp</label>
+      <label for="" class="form-label">No. Whatsapp Login</label>
       <input type="text" x-model="form.phone" class="form-control " :class="checkClass" @change="check">
       <div class="valid-feedback">Sip. Nomor belum terdaftar</div>
       <div class="invalid-feedback">Nomor telah terdaftar. Silakan <a href="/login">Login</a></div>
     </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Kata sandi</label>
+      <div class="input-group">
+        <input :type="inputPassword" x-model="form.password" class="form-control">
+        <button @click="togglePwd" class="btn btn-light border"><i class="bi bi-eye"></i></button>
+      </div>
+    </div>
+    <button class="btn btn-primary w-100" @click="next" :disabled="!validNext">Lanjutkan</button>
+  </div>
+  <div x-show="step==2" class="mb-4 border rounded p-3 bg-light">
+    <h5 class="mb-3">Informasi Umum</h5>
     <div class="mb-3">
       <label for="" class="form-label">Nama Lengkap</label>
       <input type="text" x-model="form.fullname" class="form-control">
@@ -36,9 +43,7 @@
         <option value="female">Perempuan</option>
       </select>
     </div>
-  </div>
-  <h4 class="mb-3">Sosial Media</h4>
-  <div class="mb-4 border rounded p-3 bg-light">
+    <h5 class="mt-5 mb-3">Sosial Media</h5>
     <div class="mb-3">
       <label for="" class="form-label">Instagram (opsional)</label>
       <input type="text" x-model="form.instagram" class="form-control">
@@ -47,9 +52,7 @@
       <label for="" class="form-label">No. Whatsapp (opsional)</label>
       <input type="text" x-model="form.whatsapp" class="form-control">
     </div>
-  </div>
-  <h4 class="mb-3">Catatan</h4>
-  <div class="mb-4 border rounded p-3 bg-light">
+    <h5 class="mt-5 mb-3">Catatan</h5>
     <div class="mb-3">
       <label for="" class="form-label">Bio/Tentang</label>
       <textarea x-model="form.bio" class="form-control" rows="5"></textarea>
@@ -62,20 +65,54 @@
       <label for="" class="form-label">Mengetahui komunitas ini darimana?</label>
       <textarea x-model="form.source" class="form-control"></textarea>
     </div>
+    <div>
+      <button class="btn btn-primary w-100" @click="submit" :disabled="isSending || !validSubmit">Daftar</button>
+    </div>
   </div>
-  <div>
-    <button class="btn btn-primary w-100" @click="submit">Daftar</button>
-  </div>
+</div>
+<div class="alert alert-secondary small p-2 text-center">
+  Sudah punya akun? <a href="/login">Login</a>
 </div>
 <script src="//unpkg.com/alpinejs" defer></script>
 <script>
 document.addEventListener('alpine:init', () => {
   Alpine.data('register', () => ({
-    form: {},
+    step: 1,
+    form: {
+      gender: 'male',
+      password: '',
+      phone: ''
+    },
+    isSending: false
     checkClass: '',
+    inputPassword: 'password',
+    get validNext() {
+      return this.form.phone.length >= 8 && this.form.password.length >= 6 && this.checkClass == 'is-valid'
+    },
+    get validSubmit() {
+      return Boolean(this.form.fullname)
+        && Boolean(this.form.nickname)
+        && Boolean(this.form.city)
+        && Boolean(this.form.birth_year)
+        && Boolean(this.form.gender)
+        && Boolean(this.form.bio)
+        && Boolean(this.form.reason)
+        && Boolean(this.form.source)
+    },
+    next() {
+      this.step = 2
+    },
+    togglePwd() {
+      this.inputPassword = this.inputPassword == 'password' ? 'text' : 'password'
+    },
     check() {
+      if (this.form.phone.length < 6) {
+        this.checkClass = ''
+        return
+      }
+
       let v = this
-      apiReq('get', '/api/phonecheck?phone='+v.form.phone).then(res => {
+      apiReqNoShowError('get', '/api/phonecheck?phone='+v.form.phone).then(res => {
         v.checkClass = 'is-valid'
       }).catch(e => {
         v.checkClass = 'is-invalid'
@@ -83,9 +120,13 @@ document.addEventListener('alpine:init', () => {
     },
     submit() {
       let v = this
+      this.isSending = true
       apiReq('post', '/api/register', v.form).then(res => {
         alert('Berhasil. Tunggu konfirmasi kami dalam 1x24 jam.')
         location.href = '/login?successregister'
+      })
+      .catch(e => {
+        v.isSending = false
       })
     }
   }))

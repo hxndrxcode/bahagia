@@ -23,7 +23,7 @@
       </td>
       <td>
         @if(!auth.user)
-        <i class="text-muted">Disembunyikan</i>
+        <i class="text-muted">disembunyikan</i>
         @else
         <span>{{user.city}}</span>
         @endif
@@ -35,7 +35,7 @@
       </td>
       <td>
         @if(!auth.user)
-        <i class="text-muted">Disembunyikan</i>
+        <i class="text-muted">disembunyikan</i>
         @elseif(user.instagram)
         <a href="//instagram.com/{{user.instagram}}">{{'@'+user.instagram}}</a>
         @else
@@ -49,7 +49,7 @@
       </td>
       <td>
         @if(!auth.user)
-        <i class="text-muted">Disembunyikan</i>
+        <i class="text-muted">disembunyikan</i>
         @elseif(user.whatsapp)
         <a href="//wa.me/{{user.whatsapp}}">+{{user.whatsapp}}</a>
         @else

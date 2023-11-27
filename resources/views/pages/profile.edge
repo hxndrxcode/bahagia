@@ -1,5 +1,71 @@
 @layout('layout')
 
 @section('content')
-<a href="/logout" class="btn btn-outline-danger">Logout</a>
+<table class="table mb-4 border rounded">
+  <tbody>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Username</p>
+        <p class="mb-0">{{ auth.user.username }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">No. Whatsapp Login</p>
+        <p class="mb-0">{{ auth.user.phone }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Nama Lengkap</p>
+        <p class="mb-0">{{ auth.user.fullname }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Nama Panggilan</p>
+        <p class="mb-0">{{ auth.user.nickname }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Kota Tinggal</p>
+        <p class="mb-0">{{ auth.user.city }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Tahun Lahir</p>
+        <p class="mb-0">{{ auth.user.birth_year }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Gender</p>
+        <p class="mb-0">{{ auth.user.gender == 'male' ? 'Laki-laki' : 'Perempuan' }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Akun Instagram</p>
+        <p class="mb-0">{{ auth.user.instagram }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">No. Whatsapp</p>
+        <p class="mb-0">{{ auth.user.whatsapp }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="px-2">
+        <p class="small text-muted mb-1">Bio</p>
+        <p class="mb-0">{{ auth.user.bio }}</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<a href="/profile/edit" class="mb-2 btn btn-outline-primary w-100 btn-sm">Edit Profil</a>
+<a href="/profile/password" class="mb-2 btn btn-outline-primary w-100 btn-sm">Ubah Password</a>
+<a href="/logout" class="btn btn-outline-danger w-100 btn-sm">Logout</a>
 @endsection

@@ -1,0 +1,100 @@
+@layout('layout')
+
+@section('content')
+<div x-data="profile">
+  <div class="mb-4 border rounded p-3 bg-light">
+    <h5 class="mb-3">Info Login</h5>
+    <div class="mb-3">
+      <label for="" class="form-label">No. Whatsapp Login</label>
+      <input type="text" class="form-control" value="{{auth.user.phone}}" disabled>
+      <div class="small text-muted mt-2">
+        Untuk mengubah No. Whatsapp Login, silakan <a href="//wa.me/6289617859987">hubungi Admin</a>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Username</label>
+      <input type="text" x-model="form.username" class="form-control">
+    </div>
+    <h5 class="mt-5 mb-3">Informasi Umum</h5>
+    <div class="mb-3">
+      <label for="" class="form-label">Nama Lengkap</label>
+      <input type="text" x-model="form.fullname" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Nama Panggilan</label>
+      <input type="text" x-model="form.nickname" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Kota Tinggal</label>
+      <input type="text" x-model="form.city" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Tahun Kelahiran</label>
+      <input type="number" x-model="form.birth_year" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Gender</label>
+      <select x-model="form.gender" class="form-control">
+        <option value="male">Laki-laki</option>
+        <option value="female">Perempuan</option>
+      </select>
+    </div>
+    <h5 class="mt-5 mb-3">Sosial Media</h5>
+    <div class="mb-3">
+      <label for="" class="form-label">Instagram (opsional)</label>
+      <input type="text" x-model="form.instagram" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">No. Whatsapp (opsional)</label>
+      <input type="text" x-model="form.whatsapp" class="form-control">
+    </div>
+    <h5 class="mt-5 mb-3">Catatan</h5>
+    <div class="mb-3">
+      <label for="" class="form-label">Bio/Tentang</label>
+      <textarea x-model="form.bio" class="form-control" rows="5"></textarea>
+    </div>
+    <div>
+      <button class="btn btn-primary w-100" @click="submit" :disabled="isSending || !validSubmit">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+<script src="//unpkg.com/alpinejs" defer></script>
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('profile', () => ({
+    form: {
+      username: '{{auth.user.username}}',
+      fullname: '{{auth.user.fullname}}',
+      nickname: '{{auth.user.nickname}}',
+      city: '{{auth.user.city}}',
+      birth_year: '{{auth.user.birth_year}}',
+      gender: '{{auth.user.gender}}',
+      instagram: '{{auth.user.instagram}}',
+      whatsapp: '{{auth.user.whatsapp}}',
+      bio: '{{auth.user.bio}}',
+    },
+    isSending: false,
+    get validSubmit() {
+      return Boolean(this.form.fullname)
+        && Boolean(this.form.username)
+        && Boolean(this.form.nickname)
+        && Boolean(this.form.city)
+        && Boolean(this.form.birth_year)
+        && Boolean(this.form.gender)
+        && Boolean(this.form.bio)
+    },
+    submit() {
+      this.isSending = true
+      const v = this
+      apiReq('post', '/api/profile', this.form).then(() => {
+        alert('Berhasil tersimpan')
+        location.href = '/profile'
+      })
+      .catch(e => {
+        v.isSending = false
+      })
+    }
+  }))
+})
+</script>
+@endsection

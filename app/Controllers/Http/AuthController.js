@@ -1,6 +1,6 @@
 'use strict'
 
-const { generateRandom } = require("./Helper")
+const { generateRandom, createPermalink } = require("./Helper")
 
 const Hash = use('Hash')
 const User = use('App/Models/User')
@@ -55,11 +55,10 @@ class AuthController {
 
     const data = {
       status: 'active',
-      password: '123123',
       // status: 'pending',
-      // password: generateRandom(),
+      password: req.password,
       phone: req.phone,
-      username: req.phone,
+      username: createPermalink(req.fullname, '.'),
       fullname: req.fullname,
       nickname: req.nickname,
       city: req.city,

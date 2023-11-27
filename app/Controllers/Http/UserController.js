@@ -22,6 +22,26 @@ class UserController {
     })
   }
 
+  async editProfile({ view }) {
+    return view.render('pages/profile_edit', {
+      title: 'Edit Profil',
+      breadcrumb: [
+        {path: '/profile', title: 'Profil'},
+        {path: '/profile/edit', title: 'Edit Profil', active: true},
+      ]
+    })
+  }
+
+  async editPassword({ view }) {
+    return view.render('pages/profile_password', {
+      title: 'Ubah Password',
+      breadcrumb: [
+        {path: '/profile', title: 'Profil'},
+        {path: '/profile/password', title: 'Ubah Password', active: true},
+      ]
+    })
+  }
+
   async memberDetail({ params, view }) {
     const user = await User.query().where('username', params.username).where('status', 'active').first()
     if (!user) {
@@ -72,6 +92,43 @@ class UserController {
 
     return response.status(200).send({
       members: results,
+    })
+  }
+
+  async apiEditProfile({ request, response, auth }) {
+    const fields = [
+      'fullname', 'nickname', 'username', 'city', 'birth_year', 'gender', 'instagram', 'whatsapp', 'bio'
+    ]
+    const req = request.only(fields)
+    const changes = {}
+    const old = {}
+    for (const i of fields) {
+      const item = req[i];
+      if (auth.user[i] == item) continue
+
+      changes[i] = item
+      old[i] = auth.user[i]
+    }
+
+    await User.query().where('id', auth.user.id).update(changes)
+    return response.status(200).send({
+      message: 'Berhasil'
+    })
+  }
+
+  async apiEditPassword({ request, response, auth }) {
+    const req = request.all()
+    if (req.current != auth.user.password) {
+      return response.status(400).send({
+        message: 'Kata sandi sekarang salah'
+      })
+    }
+
+    await User.query().where('id', auth.user.id).update({
+      password: req.new
+    })
+    return response.status(200).send({
+      message: 'Berhasil'
     })
   }
 }

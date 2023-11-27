@@ -1,5 +1,5 @@
 <script>
-  window.apiReq = function (method, url, data) {
+  window.apiReq = function (method, url, data, showError = true) {
     let opt = { method, headers: {'X-CSRF-Token': '{{ csrfToken }}'} }
     if (method != 'get') {
       opt = { method, headers: {"Content-Type": "application/json", 'X-CSRF-Token': '{{ csrfToken }}'}, body: JSON.stringify(data)}
@@ -12,12 +12,17 @@
             resolve(json)
           } else {
             reject(json)
-            alert(json.message)
+            if (showError) {
+              alert(json.message)
+            }
           }
         } catch(e) {
           alert('Terjadi kesalahan sistem!')
         }
       })
     })
+  }
+  window.apiReqNoShowError = function (method, url, data) {
+    return apiReq(method, url, data, false)
   }
 </script>
