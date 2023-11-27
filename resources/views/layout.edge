@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  @if(title)
+  <title>{{title}} | Ayem.Club</title>
+  @else
+  <title>Ayem.Club | Komunitas Orang Ayem</title>
+  @endif
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/style.css">
+  @include('includes/head_script')
+</head>
+<body>
+  <div class="container p-3 bg-white wrapper">
+    @include('includes/menu')
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="border rounded p-2 bg-light mb-3">
+      <ol class="breadcrumb mb-0">
+        @if(isHome)
+        <li class="breadcrumb-item small">
+          <span>Home</span>
+        </li>
+        @else
+        <li class="breadcrumb-item small">
+          <a href="/">Home</a>
+        </li>
+        @endif
+        @each(b in breadcrumb)
+        <li class="breadcrumb-item small {{b.active?'active':''}}">
+          @if(!b.active)
+          <a href="{{b.path}}">{{b.title}}</a>
+          @else
+          {{b.title}}
+          @endif
+        </li>
+        @endeach
+      </ol>
+    </nav>
+    <main>
+      @if(!isHome)
+      <h1 class="h2 pb-2 border-bottom mb-4">{{hTitle || title}}</h1>
+      @endif
+      @!section('content')
+    </main>
+  </div>
+  @include('includes/menu')
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

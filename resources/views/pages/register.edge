@@ -1,0 +1,94 @@
+@layout('layout')
+
+@section('content')
+<div class="alert alert-secondary small p-2 mb-4">
+  Sudah punya akun? <a href="/login">Login</a>
+</div>
+<div x-data="register">
+  <h4 class="mb-3">Informasi Umum</h4>
+  <div class="mb-4 border rounded p-3 bg-light">
+    <div class="mb-3">
+      <label for="" class="form-label">No. Whatsapp</label>
+      <input type="text" x-model="form.phone" class="form-control " :class="checkClass" @change="check">
+      <div class="valid-feedback">Sip. Nomor belum terdaftar</div>
+      <div class="invalid-feedback">Nomor telah terdaftar. Silakan <a href="/login">Login</a></div>
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Nama Lengkap</label>
+      <input type="text" x-model="form.fullname" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Nama Panggilan</label>
+      <input type="text" x-model="form.nickname" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Kota Tinggal</label>
+      <input type="text" x-model="form.city" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Tahun Kelahiran</label>
+      <input type="number" x-model="form.birth_year" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Gender</label>
+      <select x-model="form.gender" class="form-control">
+        <option value="male">Laki-laki</option>
+        <option value="female">Perempuan</option>
+      </select>
+    </div>
+  </div>
+  <h4 class="mb-3">Sosial Media</h4>
+  <div class="mb-4 border rounded p-3 bg-light">
+    <div class="mb-3">
+      <label for="" class="form-label">Instagram (opsional)</label>
+      <input type="text" x-model="form.instagram" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">No. Whatsapp (opsional)</label>
+      <input type="text" x-model="form.whatsapp" class="form-control">
+    </div>
+  </div>
+  <h4 class="mb-3">Catatan</h4>
+  <div class="mb-4 border rounded p-3 bg-light">
+    <div class="mb-3">
+      <label for="" class="form-label">Bio/Tentang</label>
+      <textarea x-model="form.bio" class="form-control" rows="5"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Alasan bergabung?</label>
+      <textarea x-model="form.reason" class="form-control"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="" class="form-label">Mengetahui komunitas ini darimana?</label>
+      <textarea x-model="form.source" class="form-control"></textarea>
+    </div>
+  </div>
+  <div>
+    <button class="btn btn-primary w-100" @click="submit">Daftar</button>
+  </div>
+</div>
+<script src="//unpkg.com/alpinejs" defer></script>
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('register', () => ({
+    form: {},
+    checkClass: '',
+    check() {
+      let v = this
+      apiReq('get', '/api/phonecheck?phone='+v.form.phone).then(res => {
+        v.checkClass = 'is-valid'
+      }).catch(e => {
+        v.checkClass = 'is-invalid'
+      })
+    },
+    submit() {
+      let v = this
+      apiReq('post', '/api/register', v.form).then(res => {
+        alert('Berhasil. Tunggu konfirmasi kami dalam 1x24 jam.')
+        location.href = '/login?successregister'
+      })
+    }
+  }))
+})
+</script>
+@endsection

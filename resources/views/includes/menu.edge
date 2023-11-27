@@ -1,0 +1,26 @@
+<div class="dropdown">
+  <button class="fab btn btn-light shadow border px-2 py-0" style="z-index:1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-list" style="font-size:1.5rem"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><a class="dropdown-item" href="/">Beranda</a></li>
+    <li><a class="dropdown-item" href="/member">Anggota</a></li>
+    <!--  <li><a class="dropdown-item" href="/quote">Quotes</a></li>  -->
+    <li><hr class="dropdown-divider"></li>
+    @loggedIn
+    <li><h6 class="dropdown-header">Login sebagai</h6></li>
+    <li><a href="/profile" class="dropdown-item">{{ auth.user.fullname }}</a></li>
+    @else
+    <li>
+      <div class="px-3 py-1">
+        <a href="/register" class="btn btn-primary w-100 btn-sm">Daftar</a>
+      </div>
+    </li>
+    <li>
+      <div class="px-3 py-1">
+        <a href="/login" class="btn btn-light border w-100 btn-sm">Login</a>
+      </div>
+    </li>
+    @endloggedIn
+  </ul>
+</div>

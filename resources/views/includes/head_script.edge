@@ -1,0 +1,23 @@
+<script>
+  window.apiReq = function (method, url, data) {
+    let opt = { method, headers: {'X-CSRF-Token': '{{ csrfToken }}'} }
+    if (method != 'get') {
+      opt = { method, headers: {"Content-Type": "application/json", 'X-CSRF-Token': '{{ csrfToken }}'}, body: JSON.stringify(data)}
+    }
+    return fetch(url, opt).then(res => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const json = await res.json()
+          if (res.status < 300) {
+            resolve(json)
+          } else {
+            reject(json)
+            alert(json.message)
+          }
+        } catch(e) {
+          alert('Terjadi kesalahan sistem!')
+        }
+      })
+    })
+  }
+</script>

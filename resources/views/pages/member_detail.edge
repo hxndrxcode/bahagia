@@ -1,0 +1,75 @@
+@layout('layout')
+
+@section('content')
+@if(!auth.user)
+<div class="alert alert-danger alert-dismissible small p-2 mb-4">
+  <a href="/login">Login</a> untuk melihat detail anggota
+  <button type="button" class="btn-close" style="margin-top:-8px" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+<table class="table mb-4">
+  <tbody>
+    <tr>
+      <td>
+        <i class="bi bi-person"></i>
+      </td>
+      <td class="w-100">
+        <a href="/m/{{user.username}}">/m/{{user.username}}</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <i class="bi bi-geo-alt"></i>
+      </td>
+      <td>
+        @if(!auth.user)
+        <i class="text-muted">Disembunyikan</i>
+        @else
+        <span>{{user.city}}</span>
+        @endif
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <i class="bi bi-instagram"></i>
+      </td>
+      <td>
+        @if(!auth.user)
+        <i class="text-muted">Disembunyikan</i>
+        @elseif(user.instagram)
+        <a href="//instagram.com/{{user.instagram}}">{{'@'+user.instagram}}</a>
+        @else
+        <span>-</span>
+        @endif
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <i class="bi bi-whatsapp"></i>
+      </td>
+      <td>
+        @if(!auth.user)
+        <i class="text-muted">Disembunyikan</i>
+        @elseif(user.whatsapp)
+        <a href="//wa.me/{{user.whatsapp}}">+{{user.whatsapp}}</a>
+        @else
+        <span>-</span>
+        @endif
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <i class="bi bi-calendar-check"></i>
+      </td>
+      <td>
+        {{formatDate(user.created_at)}}
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="card">
+  <div class="card-body">
+    {{ user.bio }}
+  </div>
+</div>
+@endsection

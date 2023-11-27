@@ -1,0 +1,64 @@
+@layout('layout')
+
+@section('content')
+@if(!auth.user)
+<div class="alert alert-danger alert-dismissible small p-2 mb-4">
+  <a href="/login">Login</a> untuk melihat detail anggota
+  <button type="button" class="btn-close" style="margin-top:-8px" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+<div x-data="data">
+  <div class="mb-3">
+    <input type="search" x-model="inputSearch" @keyup.enter="getData" class="form-control" placeholder="Cari...">
+  </div>
+  <template x-for="l in lists">
+    <div class="border py-2 px-3 rounded mb-3">
+      <p class="mb-2"><a :href="'/m/'+l.username" x-text="l.fullname"></a></p>
+      <div class="small text-muted">
+        <p class="mb-1"><i class="me-1 bi bi-geo-alt"></i>
+          @if(!auth.user)
+          <i>disembunyikan</i>
+          @else
+          <span x-text="l.city"></span>
+          @endif
+        </p>
+        <p class="mb-1"><i class="me-1 bi bi-instagram"></i>
+          @if(!auth.user)
+          <i>disembunyikan</i>
+          @else
+          <a x-show="l.instagram" :href="'//instagram.com/'+l.instagram" x-text="'@'+l.instagram"></a>
+          <span x-show="!l.instagram">-</span>
+          @endif
+        </p>
+        <p class="mb-1"><i class="me-1 bi bi-whatsapp"></i>
+          @if(!auth.user)
+          <i>disembunyikan</i>
+          @else
+          <a x-show="l.whatsapp" :href="'//wa.me/'+l.whatsapp" x-text="'+'+l.whatsapp"></a>
+          <span x-show="!l.whatsapp">-</span>
+          @endif
+        </p>
+      </div>
+    </div>
+  </template>
+</div>
+
+<script src="//unpkg.com/alpinejs" defer></script>
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('data', () => ({
+    inputSearch: '',
+    lists: [],
+    init() {
+      this.getData()
+    },
+    getData() {
+      let v = this
+      apiReq('get', '/api/members?search='+this.inputSearch, this.form).then(res => {
+        v.lists = res.members
+      })
+    }
+  }))
+})
+</script>
+@endsection

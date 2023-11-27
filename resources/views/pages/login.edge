@@ -1,0 +1,38 @@
+@layout('layout')
+
+@section('content')
+<div class="mb-4 border rounded p-3 bg-light" x-data="login">
+  <div class="mb-3">
+    <label for="" class="form-label">Username/No. Whatsapp</label>
+    <input type="text" x-model="form.phone" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label for="" class="form-label">Kata Sandi</label>
+    <input type="password" x-model="form.password" class="form-control">
+  </div>
+  <div class="">
+    <button class="btn btn-primary w-100" @click="login">Login</button>
+  </div>
+</div>
+<div class="alert alert-secondary small p-2 mb-2">
+  Belum punya akun? <a href="/register">Daftar</a>
+</div>
+<div class="alert alert-secondary small p-2 mb-4">
+  Lupa kata sandi? <a href="/login">Klik disini</a>
+</div>
+
+<script src="//unpkg.com/alpinejs" defer></script>
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('login', () => ({
+    form: {},
+    login() {
+      let v = this
+      apiReq('post', '/api/login', v.form).then(res => {
+        location.href = '/profile'
+      })
+    }
+  }))
+})
+</script>
+@endsection

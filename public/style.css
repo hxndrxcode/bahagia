@@ -1,0 +1,21 @@
+body {
+  background-color: rgba(128,128,128,0.5);
+}
+.fab {
+  position: fixed;
+  right: 16px;
+  top: 16px;
+}
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+  .fab {
+    left: 50%;
+    right: unset;
+    margin-left: 212px;
+  }
+}
+.wrapper {
+  min-height: 100vh;
+}
